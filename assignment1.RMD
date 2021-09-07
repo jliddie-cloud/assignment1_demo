@@ -5,7 +5,7 @@ date: "9/5/2021"
 output: html_document
 ---
 
-```{r load packages and data, message=FALSE}
+```{r load packages and data, message=FALSE, include = FALSE, warning = FALSE}
 library(sf)
 library(tidyverse)
 library(ggspatial)
@@ -25,7 +25,7 @@ ggplot(cafes) +
   scale_color_manual(values = "darkblue", name = "")
 ```
 
-# Add another layer: health areas
+# Add another layer: health areas (and POPs)
 ```{r, fig.width = 8, fig.length = 6}
 # alter default theme
 theme_set(ggthemes::theme_map())
@@ -38,6 +38,16 @@ map1 <- ggplot() +
     theme(legend.position = "top")
 
 map1
+
+# map swapping POPs for sidewalk cafes
+map2 <- ggplot() +
+    geom_sf(data = healthareas, color = "black", size = 0.2, alpha = 0.5, aes(fill = "Health Center Areas")) +
+    geom_sf(data = pops, shape = 1, size = 0.5, aes(color = "Privately owned public spaces")) +
+    scale_fill_manual(values = "red", name = "") +
+    scale_color_manual(values = "darkblue", name = "") +
+    theme(legend.position = "top")
+
+map2
 ```
 
 # Add base map: version 1
@@ -47,7 +57,7 @@ ggplot() +
     ggspatial::annotation_map_tile(zoomin = 0, progress = "none", type = "hotstyle") +
     labs(caption = "Map tiles and data by OpenStreetMap") +
     geom_sf(data = healthareas, color = "black", size = 0.2, alpha = 0.5, aes(fill = "Health Center Areas")) +
-    geom_sf(data = cafes, shape = 1, size = 0.2, aes(color = "Sidewalk cafes")) +
+    geom_sf(data = pops, size = 0.5, aes(color = "POPs")) +
     scale_fill_manual(values = "red", name = "") +
     scale_color_manual(values = "darkblue", name = "") +
     theme(legend.position = "top")
@@ -61,10 +71,24 @@ ggplot() +
     ggspatial::annotation_map_tile(zoomin = 0, progress = "none", type = "cartodark") +
     labs(caption = "Map tiles and data by OpenStreetMap") +
     geom_sf(data = healthareas, color = "black", size = 0.2, alpha = 0.5, aes(fill = "Health Center Areas")) +
-    geom_sf(data = cafes, shape = 1, size = 0.2, aes(color = "Sidewalk cafes")) +
+    geom_sf(data = pops, shape = 1, size = 0.2, aes(color = "Privately owned public spaces")) +
     scale_fill_manual(values = "red", name = "") +
     scale_color_manual(values = "pink", name = "") +
     theme(legend.position = "top")
 ```
 
+
+Version 3: less emphasis on health areas
+```{r}
+
+ggplot() +
+    ggspatial::annotation_map_tile(zoomin = 0, progress = "none", type = "hotstyle") +
+    labs(caption = "Map tiles and data by OpenStreetMap") +
+    geom_sf(data = healthareas, color = "black", size = 0.2, alpha = 0.2, aes(fill = "Health Center Areas")) +
+    geom_sf(data = pops, shape = 1, size = 0.2, aes(color = "Privately owned public spaces")) +
+    scale_fill_manual(values = "grey", name = "") +
+    scale_color_manual(values = "blue", name = "") +
+    theme(legend.position = "top")
+
+```
 
