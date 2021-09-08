@@ -28,7 +28,7 @@ ggplot(cafes) +
 # Add another layer: health areas (and POPs)
 ```{r, fig.width = 8, fig.length = 6}
 # alter default theme
-theme_set(ggthemes::theme_map())
+theme_set(theme())
 
 map1 <- ggplot() +
     geom_sf(data = healthareas, color = "black", size = 0.2, alpha = 0.5, aes(fill = "Health Center Areas")) +
@@ -55,9 +55,9 @@ map2
 
 ggplot() +
     ggspatial::annotation_map_tile(zoomin = 0, progress = "none", type = "hotstyle") +
-    labs(caption = "Map tiles and data by OpenStreetMap") +
-    geom_sf(data = healthareas, color = "black", size = 0.2, alpha = 0.5, aes(fill = "Health Center Areas")) +
-    geom_sf(data = pops, size = 0.5, aes(color = "POPs")) +
+    labs(caption = "Map tiles and data by OpenStreetMap", title = "Health areas and POPs") +
+    geom_sf(data = healthareas, color = "black", size = 1, alpha = 0.5, aes(fill = "Health Center Areas")) +
+    geom_sf(data = pops, size = 1, aes(color = "POPs")) +
     scale_fill_manual(values = "red", name = "") +
     scale_color_manual(values = "darkblue", name = "") +
     theme(legend.position = "top")
@@ -69,26 +69,65 @@ ggplot() +
 
 ggplot() +
     ggspatial::annotation_map_tile(zoomin = 0, progress = "none", type = "cartodark") +
-    labs(caption = "Map tiles and data by OpenStreetMap") +
-    geom_sf(data = healthareas, color = "black", size = 0.2, alpha = 0.5, aes(fill = "Health Center Areas")) +
-    geom_sf(data = pops, shape = 1, size = 0.2, aes(color = "Privately owned public spaces")) +
+    labs(caption = "Map tiles and data by OpenStreetMap",  title = "Health areas and POPs") +
+    geom_sf(data = healthareas, color = "black", size = 0.5, alpha = 0.5, aes(fill = "Health Center Areas")) +
+    geom_sf(data = pops, shape = 4, size = 1, aes(color = "Privately owned public spaces")) +
     scale_fill_manual(values = "red", name = "") +
-    scale_color_manual(values = "pink", name = "") +
+    scale_color_manual(values = "darkred", name = "") +
     theme(legend.position = "top")
 ```
 
-
-Version 3: less emphasis on health areas
+# Version 3: better version with dark background
 ```{r}
 
 ggplot() +
-    ggspatial::annotation_map_tile(zoomin = 0, progress = "none", type = "hotstyle") +
-    labs(caption = "Map tiles and data by OpenStreetMap") +
+    ggspatial::annotation_map_tile(zoomin = 0, progress = "none", type = "cartodark") +
+    labs(caption = "Map tiles and data by OpenStreetMap",  title = "Health areas and POPs") +
+    geom_sf(data = healthareas, color = "white", size = 0.2, alpha = 0.5, aes(fill = "Health Center Areas")) +
+    geom_sf(data = pops, size = 2, aes(color = "Privately owned public spaces")) +
+    scale_fill_manual(values = "grey", name = "") +
+    scale_color_manual(values = "darkblue", name = "") +
+    theme(legend.position = "top")
+```
+
+# Version 4: less emphasis on health areas
+```{r}
+
+ggplot() +
+    ggspatial::annotation_map_tile(zoomin = 0, progress = "none", type = "cartolight") +
+    labs(caption = "Map tiles and data by OpenStreetMap", title = "Health areas and POPs") +
     geom_sf(data = healthareas, color = "black", size = 0.2, alpha = 0.2, aes(fill = "Health Center Areas")) +
-    geom_sf(data = pops, shape = 1, size = 0.2, aes(color = "Privately owned public spaces")) +
+    geom_sf(data = pops, size = 2, shape = 2, alpha = 0.8, aes(color = "Privately owned public spaces")) +
     scale_fill_manual(values = "grey", name = "") +
     scale_color_manual(values = "blue", name = "") +
     theme(legend.position = "top")
 
 ```
 
+# Version 5: bad colors + distracting basemap
+```{r}
+ggplot() +
+    ggspatial::annotation_map_tile(zoomin = 0, progress = "none", type = "stamenwatercolor") +
+    labs(caption = "Map tiles and data by OpenStreetMap", title = "Health areas and POPs") +
+    geom_sf(data = healthareas, color = "white", size = 0.2, aes(fill = "Health Center Areas")) +
+    geom_sf(data = pops, size = 2, aes(color = "Privately owned public spaces")) +
+    scale_fill_manual(values = "green", name = "") +
+    scale_color_manual(values = "yellow", name = "") +
+    theme(legend.position = "top")
+
+```
+
+# Version 6: with centroids of health service areas
+```{r}
+healthareas.c <- sf::st_centroid(healthareas)
+
+ggplot() +
+    ggspatial::annotation_map_tile(zoomin = 0, progress = "none", type = "hotstyle") +
+    labs(caption = "Map tiles and data by OpenStreetMap", title = "Health areas and POPs") +
+    geom_sf(data = healthareas.c, size = 1, shape = 3, aes(fill = "Health Center Areas")) +
+    scale_fill_manual(values = "black", name = "") +  
+    geom_sf(data = pops, size = 2, aes(color = "POPs")) +
+    scale_color_manual(values = "darkblue", name = "") +
+    theme(legend.position = "top")
+
+```
